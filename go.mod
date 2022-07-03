@@ -9,7 +9,7 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	google.golang.org/genproto v0.0.0-20200526211855-cb27e3aa2013 // indirect
 	google.golang.org/grpc v1.47.0 // indirect
-	google.golang.org/protobuf v1.27.1 // indirect
+	google.golang.org/protobuf v1.28.0 // indirect
 	gorm.io/driver/mysql v1.3.4 // indirect
 	gorm.io/gorm v1.23.7 // indirect
 )

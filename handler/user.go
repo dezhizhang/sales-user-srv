@@ -2,8 +2,10 @@ package handler
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"time"
 	"user_srv/driver"
 	"user_srv/model"
 	"user_srv/proto"
@@ -102,4 +104,26 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	}
 	userInfoRsp := ModelToResponse(user)
 	return &userInfoRsp, nil
+}
+
+// 更新用户
+
+func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) (*empty.Empty, error) {
+	var user model.User
+	result := driver.DB.Where("id=?", req.Id).Find(&user)
+	if result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	birthDay := time.Unix(int64(req.Birthday), 0)
+	user.Name = req.Name
+	user.Role = int(req.Role)
+	user.Birthday = &birthDay
+	user.Gender = int(req.Gender)
+	user.NickName = req.NickName
+
+	result = driver.DB.Save(&user)
+	if result.Error != nil {
+		return nil, status.Errorf(codes.Internal, result.Error.Error())
+	}
+	return &empty.Empty{}, nil
 }

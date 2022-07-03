@@ -43,6 +43,7 @@ message UpdateUserInfo{
   uint64 birthday = 5;
   int32 gender = 6;
   int32 role = 7;
+  string nickName = 8;
 }
 
 //返回用户信息
