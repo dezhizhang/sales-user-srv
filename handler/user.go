@@ -65,3 +65,18 @@ func (u *UserServer) GetUserByMobile(ctx context.Context, req *proto.MobileReque
 	userInfoRsp := ModelToResponse(user)
 	return &userInfoRsp, nil
 }
+
+// 通过id查询用记信息
+
+func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*proto.UserInfoResponse, error) {
+	var user model.User
+	result := driver.DB.Where("id=?", req.Id).Find(&user)
+	if result.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
+}
