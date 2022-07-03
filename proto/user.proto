@@ -1,6 +1,6 @@
 syntax = "proto3";
 import "google/protobuf/empty.proto";
-option go_package = ".;proto;";
+option go_package = "./;proto";
 
 service User {
   rpc GetUserList(PageInfo) returns (UserListResponse); // 用户列表
@@ -38,7 +38,7 @@ message UpdateUserInfo{
   string id = 1;
   string mobile = 2;
   string name = 3;
-  string password = 3;
+  string password = 4;
   uint64 birthday = 5;
   int32 gender = 6;
   int32 role = 7;
@@ -53,6 +53,7 @@ message UserInfoResponse {
   uint64 birthday = 5;
   string gender = 6;
   int32  role = 7;
+  string name = 8;
 
 }
 
