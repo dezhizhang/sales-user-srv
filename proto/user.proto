@@ -32,6 +32,7 @@ message  CreateUserInfo{
   uint64 birthday = 4;
   int32 gender = 5;
   int32 role = 6;
+  string nickName = 7;
 }
 //更新用户
 message UpdateUserInfo{
@@ -51,7 +52,7 @@ message UserInfoResponse {
   string mobile = 3;
   string nickName = 4;
   uint64 birthday = 5;
-  string gender = 6;
+  int32 gender = 6;
   int32  role = 7;
   string name = 8;
 

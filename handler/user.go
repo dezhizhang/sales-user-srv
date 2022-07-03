@@ -20,7 +20,7 @@ func ModelToResponse(user model.User) proto.UserInfoResponse {
 		Password: user.Password,
 		NickName: user.NickName,
 		Name:     user.Name,
-		Gender:   user.Gender,
+		Gender:   int32(user.Gender),
 		Role:     int32(user.Role),
 	}
 
@@ -76,6 +76,29 @@ func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*pr
 	}
 	if result.Error != nil {
 		return nil, result.Error
+	}
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
+}
+
+// 创建用户
+
+func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) (*proto.UserInfoResponse, error) {
+	var user model.User
+	result := driver.DB.Where("mobile?=", req.Mobile).Find(&user)
+	if result.RowsAffected == 1 {
+		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
+	}
+	user.Name = req.Name
+	user.NickName = req.NickName
+	user.Mobile = req.Mobile
+	user.Gender = int(req.Gender)
+	user.Password = utils.Md5(req.Password)
+
+	result = driver.DB.Create(&user)
+
+	if result.Error != nil {
+		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
 	userInfoRsp := ModelToResponse(user)
 	return &userInfoRsp, nil
