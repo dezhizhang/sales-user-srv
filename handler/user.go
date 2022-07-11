@@ -5,7 +5,6 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"time"
 	"user_srv/driver"
 	"user_srv/model"
 	"user_srv/proto"
@@ -17,18 +16,15 @@ type UserServer struct {
 
 func ModelToResponse(user model.User) proto.UserInfoResponse {
 	userInfoResponse := proto.UserInfoResponse{
-		Id:       user.Id,
+		Id:       uint64(user.Id),
 		Mobile:   user.Mobile,
 		Password: user.Password,
-		NickName: user.NickName,
 		Name:     user.Name,
+		Birthday: uint64(user.Birthday),
 		Gender:   int32(user.Gender),
 		Role:     int32(user.Role),
 	}
 
-	if user.Birthday != nil {
-		userInfoResponse.Birthday = uint64(user.Birthday.Unix())
-	}
 	return userInfoResponse
 }
 
@@ -57,7 +53,7 @@ func (u *UserServer) GetUserList(ctx context.Context, req *proto.PageInfo) (*pro
 
 func (u *UserServer) GetUserByMobile(ctx context.Context, req *proto.MobileRequest) (*proto.UserInfoResponse, error) {
 	var user model.User
-	result := driver.DB.Where("mobile?=", req.Mobile).Find(&user)
+	result := driver.DB.Where("mobile=?", req.Mobile).Find(&user)
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
@@ -91,9 +87,10 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	if result.RowsAffected == 1 {
 		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
 	}
+	user.Id = int64(req.Id)
 	user.Name = req.Name
-	user.NickName = req.NickName
 	user.Mobile = req.Mobile
+	user.Birthday = int(req.Birthday)
 	user.Gender = int(req.Gender)
 	user.Password = utils.Md5(req.Password)
 
@@ -114,16 +111,26 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
-	birthDay := time.Unix(int64(req.Birthday), 0)
 	user.Name = req.Name
 	user.Role = int(req.Role)
-	user.Birthday = &birthDay
+	user.Birthday = int(req.Birthday)
 	user.Gender = int(req.Gender)
-	user.NickName = req.NickName
 
 	result = driver.DB.Save(&user)
 	if result.Error != nil {
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
 	return &empty.Empty{}, nil
+}
+
+// 删除用户
+
+func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*empty.Empty, error) {
+	var user model.User
+	result := driver.DB.Where("id=?", req.Id).Delete(&user)
+	if result.RowsAffected == 1 {
+		return &empty.Empty{}, nil
+	}
+	return nil, result.Error
+
 }

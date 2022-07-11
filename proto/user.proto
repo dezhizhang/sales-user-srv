@@ -8,6 +8,7 @@ service User {
   rpc GetUserById(IdRequest) returns(UserInfoResponse); // 通过id查询用户
   rpc CreateUser(CreateUserInfo) returns(UserInfoResponse); //创建用户
   rpc UpdateUser(UpdateUserInfo) returns(google.protobuf.Empty); //更新用户
+  rpc DeleteUser(IdRequest) returns(google.protobuf.Empty); //删除用户
 }
 
 //分页信息
@@ -21,7 +22,7 @@ message MobileRequest{
 }
 //id查询
 message  IdRequest {
-  int32 id = 1;
+  uint64 id = 1;
 }
 
 //注册用户
@@ -32,30 +33,28 @@ message  CreateUserInfo{
   uint64 birthday = 4;
   int32 gender = 5;
   int32 role = 6;
-  string nickName = 7;
+  uint64 id = 7;
 }
 //更新用户
 message UpdateUserInfo{
-  string id = 1;
+  uint64 id = 1;
   string mobile = 2;
   string name = 3;
   string password = 4;
   uint64 birthday = 5;
   int32 gender = 6;
   int32 role = 7;
-  string nickName = 8;
 }
 
 //返回用户信息
 message UserInfoResponse {
-  int32 id = 1;
+  uint64 id = 1;
   string password = 2;
   string mobile = 3;
-  string nickName = 4;
-  uint64 birthday = 5;
-  int32 gender = 6;
-  int32  role = 7;
-  string name = 8;
+  uint64 birthday = 4;
+  int32 gender = 5;
+  int32  role = 6;
+  string name = 7;
 
 }
 
