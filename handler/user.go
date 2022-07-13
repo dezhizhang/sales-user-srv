@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,7 +17,7 @@ type UserServer struct {
 
 func ModelToResponse(user model.User) proto.UserInfoResponse {
 	userInfoResponse := proto.UserInfoResponse{
-		Id:       uint64(user.Id),
+		Id:       user.Id,
 		Mobile:   user.Mobile,
 		Password: user.Password,
 		Name:     user.Name,
@@ -87,7 +88,7 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	if result.RowsAffected == 1 {
 		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
 	}
-	user.Id = int64(req.Id)
+	user.Id = req.Id
 	user.Name = req.Name
 	user.Mobile = req.Mobile
 	user.Birthday = int(req.Birthday)
@@ -127,10 +128,27 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 
 func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*empty.Empty, error) {
 	var user model.User
+	fmt.Println(req.Id)
 	result := driver.DB.Where("id=?", req.Id).Delete(&user)
-	if result.RowsAffected == 1 {
-		return &empty.Empty{}, nil
+	if result.Error != nil {
+		return &empty.Empty{}, result.Error
 	}
-	return nil, result.Error
+	fmt.Println(result.RowsAffected)
+	return &empty.Empty{}, nil
 
+}
+
+//查询用户是否存在
+
+func (u *UserServer) GetUserByExist(ctx context.Context, req *proto.UserLogin) (*proto.UserInfoResponse, error) {
+	var user model.User
+	result := driver.DB.Where("mobile=? AND password=?", req.Mobile, utils.Md5(req.Password)).Find(&user)
+	if result.RowsAffected != 1 {
+		return nil, status.Errorf(codes.NotFound, "量询用户不存在")
+	}
+	if result.Error != nil {
+		return nil, status.Errorf(codes.Internal, result.Error.Error())
+	}
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
 }
