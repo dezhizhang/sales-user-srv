@@ -1,7 +1,11 @@
 package global
 
-import "sales-user-srv/model"
+import (
+	"gorm.io/gorm"
+	"sales-user-srv/model"
+)
 
 var (
-	UserSrv *model.ServerConfig
+	ServerConfig *model.ServerConfig
+	DB           *gorm.DB
 )
