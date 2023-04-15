@@ -1,6 +1,6 @@
 package global
 
-import "user_srv/model"
+import "sales-user-srv/model"
 
 var (
 	UserSrv *model.ServerConfig

@@ -4,10 +4,10 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
-	"user_srv/config"
-	"user_srv/handler"
-	"user_srv/initialize"
-	"user_srv/proto"
+	"sales-user-srv/config"
+	"sales-user-srv/handler"
+	"sales-user-srv/initialize"
+	"sales-user-srv/proto"
 )
 
 func main() {

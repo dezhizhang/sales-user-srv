@@ -3,8 +3,8 @@ package config
 import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"user_srv/global"
-	"user_srv/model"
+	"sales-user-srv/global"
+	"sales-user-srv/model"
 )
 
 func Init() {

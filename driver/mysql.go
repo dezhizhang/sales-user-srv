@@ -3,7 +3,7 @@ package driver
 import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"user_srv/model"
+	"sales-user-srv/model"
 )
 
 var DB *gorm.DB

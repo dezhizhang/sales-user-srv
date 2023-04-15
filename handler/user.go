@@ -6,10 +6,10 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"user_srv/driver"
-	"user_srv/model"
-	"user_srv/proto"
-	"user_srv/utils"
+	"sales-user-srv/driver"
+	"sales-user-srv/model"
+	"sales-user-srv/proto"
+	"sales-user-srv/utils"
 )
 
 type UserServer struct {

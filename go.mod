@@ -1,4 +1,4 @@
-module user_srv
+module sales-user-srv
 
 go 1.17
 
