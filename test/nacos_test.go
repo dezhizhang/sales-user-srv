@@ -1,6 +1,14 @@
-# 用户服务
-### go操作nacos
-```go
+package test
+
+import (
+	"fmt"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	testing2 "testing"
+	"time"
+)
+
 func TestNacos(t *testing2.T) {
 	sc := []constant.ServerConfig{
 		*constant.NewServerConfig("127.0.0.1", 8848),
@@ -48,4 +56,3 @@ func TestNacos(t *testing2.T) {
 	fmt.Println("-------- :" + content)
 
 }
-```

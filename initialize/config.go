@@ -16,10 +16,9 @@ func GetEnvInfo(env string) bool {
 // 初始化配置文件
 
 func InitConfig() {
-	viper.SetConfigFile("config.yaml")
 
 	v := viper.New()
-
+	viper.SetConfigFile("config.yaml")
 	if err := v.ReadInConfig(); err != nil {
 		panic(err)
 	}

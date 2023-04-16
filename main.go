@@ -8,11 +8,15 @@ import (
 	"google.golang.org/grpc/health"
 	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
+	"sales-user-srv/config"
 	"sales-user-srv/handler"
 	"sales-user-srv/proto"
 )
 
 func main() {
+
+	// 初始化配置文件
+	config.InitConfig()
 
 	server := grpc.NewServer()
 	proto.RegisterUserServer(server, &handler.UserServer{})

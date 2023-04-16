@@ -1,8 +1,8 @@
-name: 'sales-user-srv'
-
-mysql:
+nacos:
   host: '127.0.0.1'
-  port: 3306
-  user: 'root'
-  password: '701XTAY1993'
-  name: 'sales'
+  port: 8848
+  namespace: '9cbeaaea-c313-4ff4-b0ce-3d9f00925555'
+  user: 'nacos'
+  password: 'nacos'
+  dataid: 'sales-user-srv'
+  group: 'dev'
