@@ -9,16 +9,18 @@ type MysqlConfig struct {
 }
 
 type ServerConfig struct {
+	Host      string      `mapstructure:"host" json:"host"`
+	Port      int         `mapstructure:"port" json:"port"`
 	Name      string      `mapstructure:"name" json:"name"`
 	MysqlInfo MysqlConfig `mapstructure:"mysql" json:"mysql"`
 }
 
 type NacosConfig struct {
 	Host      string `mapstructure:"host" json:"host"`
-	Port      int    `mapstructure:"host" json:"port"`
+	Port      uint64 `mapstructure:"port" json:"port"`
 	Namespace string `mapstructure:"namespace" json:"namespace"`
 	User      string `mapstructure:"user" json:"user"`
-	Password  string `mapstructure:"password"json:"password"`
+	Password  string `mapstructure:"password" json:"password"`
 	DataId    string `mapstructure:"dataId" json:"dataId"`
-	Group     string `mapstructure:"group"json:"group"`
+	Group     string `mapstructure:"group" json:"group"`
 }

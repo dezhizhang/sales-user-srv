@@ -1,22 +1,23 @@
-package test
+package initialize
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/v2/vo"
-	testing2 "testing"
-	"time"
+	"sales-user-srv/global"
+	"sales-user-srv/model"
 )
 
-func TestNacos(t *testing2.T) {
+func InitNacosConfig(config *model.NacosConfig) {
+
 	sc := []constant.ServerConfig{
-		*constant.NewServerConfig("127.0.0.1", 8848),
+		*constant.NewServerConfig(config.Host, config.Port),
 	}
 
 	//create ClientConfig
 	cc := *constant.NewClientConfig(
-		constant.WithNamespaceId("9cbeaaea-c313-4ff4-b0ce-3d9f00925555"),
+		constant.WithNamespaceId(config.Namespace),
 		constant.WithTimeoutMs(5000),
 		constant.WithNotLoadCacheAtStart(true),
 		constant.WithLogDir("tmp/nacos/log"),
@@ -24,7 +25,6 @@ func TestNacos(t *testing2.T) {
 		constant.WithLogLevel("debug"),
 	)
 
-	// create config client
 	client, err := clients.NewConfigClient(
 		vo.NacosClientParam{
 			ClientConfig:  &cc,
@@ -35,24 +35,16 @@ func TestNacos(t *testing2.T) {
 	if err != nil {
 		panic(err)
 	}
-
-	err = client.ListenConfig(vo.ConfigParam{
-		DataId: "sales-usr-srv",
-		Group:  "dev",
-		OnChange: func(namespace, group, dataId, data string) {
-			fmt.Println("配置文件发生改变")
-		},
+	//获取nacos配置
+	content, err := client.GetConfig(vo.ConfigParam{
+		DataId: config.DataId,
+		Group:  config.Group,
 	})
+
+	serverConfig := &model.ServerConfig{}
+	err = json.Unmarshal([]byte(content), &serverConfig)
 	if err != nil {
 		panic(err)
 	}
-
-	time.Sleep(10 * time.Second)
-
-	content, err := client.GetConfig(vo.ConfigParam{
-		DataId: "sales-usr-srv",
-		Group:  "dev",
-	})
-	fmt.Println("-------- :" + content)
-
+	global.ServerConfig = serverConfig
 }
