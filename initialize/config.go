@@ -16,22 +16,17 @@ func GetEnvInfo(env string) bool {
 // 初始化配置文件
 
 func InitConfig() {
-	debug := GetEnvInfo(SALES_USER_DRV)
+	viper.SetConfigFile("config.yaml")
 
-	configFilePrefix := "config"
-
-	configFileName := fmt.Sprintf("sales-user-srv/%s-pro.yaml", configFilePrefix)
-
-	if debug {
-		configFileName = fmt.Sprintf("sales-user-srv/%s-debug.yaml", configFileName)
-	}
 	v := viper.New()
-	viper.SetConfigName(configFileName)
+
 	if err := v.ReadInConfig(); err != nil {
 		panic(err)
 	}
 
-	if err := v.Unmarshal(global.ServerConfig); err != nil {
+	fmt.Println("---------", global.ServerConfig)
+
+	if err := v.Unmarshal(&global.ServerConfig); err != nil {
 		panic(err)
 	}
 

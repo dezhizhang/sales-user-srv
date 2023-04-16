@@ -4,15 +4,13 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
-	"sales-user-srv/config"
 	"sales-user-srv/handler"
 	"sales-user-srv/initialize"
 	"sales-user-srv/proto"
 )
 
 func main() {
-	// 初始化配置文件
-	config.Init()
+
 	// 初始化日志
 	initialize.Logger()
 
@@ -21,7 +19,6 @@ func main() {
 	listen, err := net.Listen("tcp", "127.0.0.1:8000")
 	if err != nil {
 		panic("failed to listen" + err.Error())
-
 	}
 	err = server.Serve(listen)
 	if err != nil {

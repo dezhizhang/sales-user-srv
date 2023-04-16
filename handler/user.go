@@ -6,7 +6,7 @@ import (
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"sales-user-srv/driver"
+	"sales-user-srv/global"
 	"sales-user-srv/model"
 	"sales-user-srv/proto"
 	"sales-user-srv/utils"
@@ -33,14 +33,14 @@ func ModelToResponse(user model.User) proto.UserInfoResponse {
 
 func (u *UserServer) GetUserList(ctx context.Context, req *proto.PageInfo) (*proto.UserListResponse, error) {
 	var users []model.User
-	result := driver.DB.Find(&users)
+	result := global.DB.Find(&users)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 	rsp := &proto.UserListResponse{}
 	rsp.Total = int32(result.RowsAffected)
 	//分页
-	driver.DB.Scopes(utils.Paginate(int(req.PageIndex), int(req.PageSize))).Find(&users)
+	global.DB.Scopes(utils.Paginate(int(req.PageIndex), int(req.PageSize))).Find(&users)
 
 	for _, user := range users {
 		userInfoResp := ModelToResponse(user)
@@ -54,7 +54,7 @@ func (u *UserServer) GetUserList(ctx context.Context, req *proto.PageInfo) (*pro
 
 func (u *UserServer) GetUserByMobile(ctx context.Context, req *proto.MobileRequest) (*proto.UserInfoResponse, error) {
 	var user model.User
-	result := driver.DB.Where("mobile=?", req.Mobile).Find(&user)
+	result := global.DB.Where("mobile=?", req.Mobile).Find(&user)
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
@@ -69,7 +69,7 @@ func (u *UserServer) GetUserByMobile(ctx context.Context, req *proto.MobileReque
 
 func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*proto.UserInfoResponse, error) {
 	var user model.User
-	result := driver.DB.Where("id=?", req.Id).Find(&user)
+	result := global.DB.Where("id=?", req.Id).Find(&user)
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
@@ -84,7 +84,7 @@ func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*pr
 
 func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) (*proto.UserInfoResponse, error) {
 	var user model.User
-	result := driver.DB.Where("mobile?=", req.Mobile).Find(&user)
+	result := global.DB.Where("mobile?=", req.Mobile).Find(&user)
 	if result.RowsAffected == 1 {
 		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
 	}
@@ -95,7 +95,7 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	user.Gender = int(req.Gender)
 	user.Password = utils.Md5(req.Password)
 
-	result = driver.DB.Create(&user)
+	result = global.DB.Create(&user)
 
 	if result.Error != nil {
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
@@ -108,7 +108,7 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 
 func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) (*empty.Empty, error) {
 	var user model.User
-	result := driver.DB.Where("id=?", req.Id).Find(&user)
+	result := global.DB.Where("id=?", req.Id).Find(&user)
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
@@ -117,7 +117,7 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 	user.Birthday = int(req.Birthday)
 	user.Gender = int(req.Gender)
 
-	result = driver.DB.Save(&user)
+	result = global.DB.Save(&user)
 	if result.Error != nil {
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
@@ -129,7 +129,7 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*empty.Empty, error) {
 	var user model.User
 	fmt.Println(req.Id)
-	result := driver.DB.Where("id=?", req.Id).Delete(&user)
+	result := global.DB.Where("id=?", req.Id).Delete(&user)
 	if result.Error != nil {
 		return &empty.Empty{}, result.Error
 	}
@@ -142,7 +142,7 @@ func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*emp
 
 func (u *UserServer) GetUserByExist(ctx context.Context, req *proto.UserLogin) (*proto.UserInfoResponse, error) {
 	var user model.User
-	result := driver.DB.Where("mobile=? AND password=?", req.Mobile, utils.Md5(req.Password)).Find(&user)
+	result := global.DB.Where("mobile=? AND password=?", req.Mobile, utils.Md5(req.Password)).Find(&user)
 	if result.RowsAffected != 1 {
 		return nil, status.Errorf(codes.NotFound, "量询用户不存在")
 	}
