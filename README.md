@@ -49,3 +49,15 @@ func TestNacos(t *testing2.T) {
 
 }
 ```
+
+### md5 加密码生成
+```go
+func TestMD5Method(t *testing.T) {
+	
+	str := "晓智科技"
+	md := md5.New()
+	io.WriteString(md, str)
+	strings := hex.EncodeToString(md.Sum(nil))
+	fmt.Println(strings)
+}
+```

@@ -9,6 +9,6 @@ type User struct {
 	Password string     `gorm:"type:varchar(100);not null" json:"password"`
 	NickName string     `gorm:"type:varchar(20)" json:"nickName"`
 	Birthday *time.Time `gorm:"type:datetime" json:"birthday"`
-	Gender   string     `gorm:"type: varchar(6);default:0 comment 'female 表示女,male 表示男'" json:"gender"`
+	Gender   string     `gorm:"type: varchar(6); comment 'female 表示女,male 表示男'" json:"gender"`
 	Role     int        `gorm:"type: int;column:role;default:1"`
 }
