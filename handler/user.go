@@ -16,17 +16,18 @@ type UserServer struct {
 }
 
 func ModelToResponse(user model.User) proto.UserInfoResponse {
-	userInfoResponse := proto.UserInfoResponse{
-		Id:       user.Id,
-		Mobile:   user.Mobile,
-		Password: user.Password,
-		Name:     user.Name,
-		Birthday: uint64(user.Birthday),
-		Gender:   int32(user.Gender),
-		Role:     int32(user.Role),
-	}
+	//userInfoResponse := proto.UserInfoResponse{
+	//	Id:       user.Id,
+	//	Mobile:   user.Mobile,
+	//	Password: user.Password,
+	//	Name:     user.Name,
+	//	Birthday: uint64(user.Birthday),
+	//	Gender:   int32(user.Gender),
+	//	Role:     int32(user.Role),
+	//}
 
-	return userInfoResponse
+	//return userInfoResponse
+	return proto.UserInfoResponse{}
 }
 
 //反回用户列表信息
@@ -88,12 +89,12 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	if result.RowsAffected == 1 {
 		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
 	}
-	user.Id = req.Id
-	user.Name = req.Name
-	user.Mobile = req.Mobile
-	user.Birthday = int(req.Birthday)
-	user.Gender = int(req.Gender)
-	user.Password = utils.Md5(req.Password)
+	//user.Id = req.Id
+	//user.Name = req.Name
+	//user.Mobile = req.Mobile
+	//user.Birthday = int(req.Birthday)
+	//user.Gender = int(req.Gender)
+	//user.Password = utils.Md5(req.Password)
 
 	result = global.DB.Create(&user)
 
@@ -112,10 +113,10 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "用户不存在")
 	}
-	user.Name = req.Name
-	user.Role = int(req.Role)
-	user.Birthday = int(req.Birthday)
-	user.Gender = int(req.Gender)
+	//user.Name = req.Name
+	//user.Role = int(req.Role)
+	//user.Birthday = int(req.Birthday)
+	//user.Gender = int(req.Gender)
 
 	result = global.DB.Save(&user)
 	if result.Error != nil {
