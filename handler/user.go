@@ -15,8 +15,7 @@ import (
 type UserServer struct {
 }
 
-//DeleteUser(context.Context, *IdRequest) (*emptypb.Empty, error)
-//CheckPassword(context.Context, *CheckInfo) (*CheckResponse, error)
+//
 
 func ModelToResponse(user model.User) proto.UserInfoResponse {
 	userInfoResponse := proto.UserInfoResponse{
@@ -135,4 +134,8 @@ func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*emp
 		return nil, status.Errorf(codes.Internal, tx.Error.Error())
 	}
 	return &empty.Empty{}, nil
+}
+
+func (u *UserServer) CheckPassword(ctx context.Context, req *proto.CheckInfo) (*proto.CheckResponse, error) {
+	return nil, nil
 }
