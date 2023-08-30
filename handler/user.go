@@ -2,6 +2,8 @@ package handler
 
 import (
 	"context"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 	"sales-user-srv/global"
 	"sales-user-srv/model"
 	"sales-user-srv/proto"
@@ -11,9 +13,6 @@ import (
 type UserServer struct {
 }
 
-//GetUserList(context.Context, *PageInfo) (*UserListResponse, error)
-//GetUserByMobile(context.Context, *MobileRequest) (*UserInfoResponse, error)
-//GetUserById(context.Context, *IdRequest) (*UserInfoResponse, error)
 //CreateUser(context.Context, *CreateUserInfo) (*UserInfoResponse, error)
 //UpdateUser(context.Context, *UpdateUserInfo) (*emptypb.Empty, error)
 //DeleteUser(context.Context, *IdRequest) (*emptypb.Empty, error)
@@ -54,4 +53,33 @@ func (u *UserServer) GetUserList(ctx context.Context, req *proto.PageInfo) (*pro
 		rsp.Data = append(rsp.Data, &userInfoResp)
 	}
 	return rsp, nil
+}
+
+// GetUserByMobile 通过mobile查询用户
+func (u *UserServer) GetUserByMobile(ctx context.Context, req *proto.MobileRequest) (*proto.UserInfoResponse, error) {
+	var user model.User
+	tx := global.DB.Where(&model.User{Mobile: req.Mobile}).Find(&user)
+	if tx.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
+}
+
+// GetUserById 通过id查询用户
+func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*proto.UserInfoResponse, error) {
+	var user model.User
+	tx := global.DB.Where("id =? ", req.Id).Find(&user)
+	if tx.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	if tx.Error != nil {
+		return nil, tx.Error
+	}
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
 }
