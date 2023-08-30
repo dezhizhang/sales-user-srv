@@ -83,3 +83,23 @@ func (u *UserServer) GetUserById(ctx context.Context, req *proto.IdRequest) (*pr
 	userInfoRsp := ModelToResponse(user)
 	return &userInfoRsp, nil
 }
+
+// CreateUser 新建用户
+func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) (*proto.UserInfoResponse, error) {
+	var user model.User
+	tx := global.DB.Where(&model.User{Mobile: req.Mobile}).Find(&user)
+	if tx.RowsAffected == 1 {
+		return nil, status.Errorf(codes.AlreadyExists, "用户已存在")
+	}
+
+	user.Name = req.Name
+	user.Mobile = req.Mobile
+	user.Password = utils.Md5(req.Password)
+
+	tx = global.DB.Create(&user)
+	if tx.Error != nil {
+		return nil, status.Errorf(codes.Internal, tx.Error.Error())
+	}
+	userInfoRsp := ModelToResponse(user)
+	return &userInfoRsp, nil
+}
