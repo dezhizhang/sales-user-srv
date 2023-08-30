@@ -15,7 +15,6 @@ import (
 type UserServer struct {
 }
 
-//UpdateUser(context.Context, *UpdateUserInfo) (*emptypb.Empty, error)
 //DeleteUser(context.Context, *IdRequest) (*emptypb.Empty, error)
 //CheckPassword(context.Context, *CheckInfo) (*CheckResponse, error)
 
@@ -118,6 +117,20 @@ func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) 
 	user.Birthday = &birthday
 	user.Gender = req.Gender
 	tx = global.DB.Save(&user)
+	if tx.Error != nil {
+		return nil, status.Errorf(codes.Internal, tx.Error.Error())
+	}
+	return &empty.Empty{}, nil
+}
+
+// DeleteUser 删除用户
+func (u *UserServer) DeleteUser(ctx context.Context, req *proto.IdRequest) (*empty.Empty, error) {
+	var user model.User
+	tx := global.DB.Where("id = ?", req.Id).Find(&user)
+	if tx.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	tx = global.DB.Delete(&user)
 	if tx.Error != nil {
 		return nil, status.Errorf(codes.Internal, tx.Error.Error())
 	}
