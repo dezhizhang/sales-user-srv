@@ -2,18 +2,19 @@ package handler
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"sales-user-srv/global"
 	"sales-user-srv/model"
 	"sales-user-srv/proto"
 	"sales-user-srv/utils"
+	"time"
 )
 
 type UserServer struct {
 }
 
-//CreateUser(context.Context, *CreateUserInfo) (*UserInfoResponse, error)
 //UpdateUser(context.Context, *UpdateUserInfo) (*emptypb.Empty, error)
 //DeleteUser(context.Context, *IdRequest) (*emptypb.Empty, error)
 //CheckPassword(context.Context, *CheckInfo) (*CheckResponse, error)
@@ -102,4 +103,23 @@ func (u *UserServer) CreateUser(ctx context.Context, req *proto.CreateUserInfo) 
 	}
 	userInfoRsp := ModelToResponse(user)
 	return &userInfoRsp, nil
+}
+
+// UpdateUser 更新用户
+func (u *UserServer) UpdateUser(ctx context.Context, req *proto.UpdateUserInfo) (*empty.Empty, error) {
+	var user model.User
+	tx := global.DB.Where("id = ?", req.Id).Find(&user)
+	if tx.RowsAffected == 0 {
+		return nil, status.Errorf(codes.NotFound, "用户不存在")
+	}
+	birthday := time.Unix(int64(req.Birthday), 0)
+	user.Name = req.Name
+	user.NickName = req.Name
+	user.Birthday = &birthday
+	user.Gender = req.Gender
+	tx = global.DB.Save(&user)
+	if tx.Error != nil {
+		return nil, status.Errorf(codes.Internal, tx.Error.Error())
+	}
+	return &empty.Empty{}, nil
 }
