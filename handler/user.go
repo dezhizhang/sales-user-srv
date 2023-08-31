@@ -13,6 +13,8 @@ import (
 )
 
 type UserServer struct {
+	//proto.UnimplementedGreeterServer
+	proto.UnimplementedUserServer
 }
 
 //
