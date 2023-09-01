@@ -45,10 +45,9 @@ message  CreateUserInfo{
   string mobile = 1;
   string name = 2;
   string password = 3;
-  uint64 birthday = 4;
-  string gender = 5;
-  int32 role = 6;
-  string id = 7;
+  string gender = 4;
+  int32 role = 5;
+  string id = 6;
 }
 //更新用户
 message UpdateUserInfo{
@@ -56,9 +55,8 @@ message UpdateUserInfo{
   string mobile = 2;
   string name = 3;
   string password = 4;
-  uint64 birthday = 5;
-  string gender = 6;
-  int32 role = 7;
+  string gender = 5;
+  int32 role = 6;
 }
 
 //返回用户信息
@@ -67,10 +65,9 @@ message UserInfoResponse {
   string password = 2;
   string mobile = 3;
   string nickname = 4;
-  uint64 birthday = 5;
-  string gender = 6;
-  int32  role = 7;
-  string name = 8;
+  string gender = 5;
+  int32  role = 6;
+  string name = 7;
 }
 
 //返回用户列表信息

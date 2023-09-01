@@ -1,37 +1,30 @@
 package main
 
 import (
-	"sales-user-srv/global"
-	"sales-user-srv/model"
+	"google.golang.org/grpc"
+	"log"
+	"net"
+	"sales-user-srv/handler"
+	"sales-user-srv/proto"
 )
 
 func main() {
-	global.DB.Create(&model.User{})
-	//_, err := config.ReadInConfig()
-	//if err != nil {
-	//	zap.L().Error("读取配置文件失败%s")
+	server := grpc.NewServer()
+	proto.RegisterUserServer(server, &handler.UserServer{})
+	listen, err := net.Listen("tcp", "localhost:8082")
+	if err != nil {
+		log.Printf("监听失败%s", err.Error())
+	}
+
+	err = server.Serve(listen)
+	if err != nil {
+		log.Printf("启动服务失败%s", err.Error())
+	}
+	//
+	//tx := driver.DB.Create(&model.User{ID: "123", Name: "刘德华12", Mobile: "15992478448", Password: "123456"})
+	//if tx.RowsAffected == 0 {
+	//	log.Printf("创建用户失败%s", tx.Error.Error())
+	//	return
 	//}
-	//
-	//// 初始化nacos配置文件
-	////initialize.InitNacosConfig(config)
-	//
-	//// 获取全局配置
-	//serverConfig := global.ServerConfig
-	//
-	////初始化grpc服务
-	//server := grpc.NewServer()
-	//proto.RegisterUserServer(server, &handler.UserServer{})
-	//listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port))
-	//if err != nil {
-	//	panic("监听服务失败" + err.Error())
-	//}
-	//err = server.Serve(listen)
-	//
-	//// 注册服务发现
-	////initialize.InitConsul(server)
-	//
-	//if err != nil {
-	//	panic("grpc启动失败" + err.Error())
-	//}
-	//zap.S().Info("服务器运行在:8000端口上")
+	//fmt.Println("创建用户成功")
 }
