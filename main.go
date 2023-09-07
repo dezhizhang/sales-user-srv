@@ -1,17 +1,26 @@
 package main
 
 import (
+	"fmt"
 	"google.golang.org/grpc"
 	"log"
 	"net"
+	"sales-user-srv/global"
 	"sales-user-srv/handler"
+	"sales-user-srv/initialize"
 	"sales-user-srv/proto"
 )
 
 func main() {
+	// 初始化配置文件
+	initialize.InitConfig()
+
+	host := global.ServerConfig.SalesUserSrvConfig.Host
+	port := global.ServerConfig.SalesUserSrvConfig.Port
+
 	server := grpc.NewServer()
 	proto.RegisterUserServer(server, &handler.UserServer{})
-	listen, err := net.Listen("tcp", "localhost:8082")
+	listen, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		log.Printf("监听失败%s", err.Error())
 	}
@@ -20,11 +29,4 @@ func main() {
 	if err != nil {
 		log.Printf("启动服务失败%s", err.Error())
 	}
-	//
-	//tx := driver.DB.Create(&model.User{ID: "123", Name: "刘德华12", Mobile: "15992478448", Password: "123456"})
-	//if tx.RowsAffected == 0 {
-	//	log.Printf("创建用户失败%s", tx.Error.Error())
-	//	return
-	//}
-	//fmt.Println("创建用户成功")
 }

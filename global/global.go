@@ -6,7 +6,6 @@ import (
 )
 
 var (
-	NacosInfo    *model.NacosConfig
-	ServerConfig *model.ServerConfig
+	ServerConfig *model.SalesServerConfig = &model.SalesServerConfig{}
 	DB           *gorm.DB
 )
