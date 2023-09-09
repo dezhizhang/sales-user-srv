@@ -6,6 +6,6 @@ import (
 )
 
 var (
-	ServerConfig *model.SalesServerConfig = &model.SalesServerConfig{}
+	ServerConfig *model.ServerConfig = &model.ServerConfig{}
 	DB           *gorm.DB
 )

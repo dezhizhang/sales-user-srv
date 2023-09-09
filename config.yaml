@@ -1,5 +1,13 @@
 
-name: "sales-user-srv"
-sales_user_srv:
+name: "user-srv"
+
+user_srv:
   host: "localhost"
-  port: 8085
+  port: 8082
+
+mysql:
+  host: "localhost"
+  port: 3306
+  name: "sales_user_srv"
+  user: "root"
+  password: "701XTAY1993"
