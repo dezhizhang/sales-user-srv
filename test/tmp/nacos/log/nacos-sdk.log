@@ -1,0 +1,8 @@
+2023-09-10T22:06:12.125+0800	ERROR	cache/disk_cache.go:101	get config from cache, cacheKey:sales-usr-srv@@dev@@9cbeaaea-c313-4ff4-b0ce-3d9f00925555, cacheDir:tmp/nacos/cache/config, error:open tmp/nacos/cache/config/sales-usr-srv@@dev@@9cbeaaea-c313-4ff4-b0ce-3d9f00925555: no such file or directory 
+2023-09-10T22:06:17.127+0800	DEBUG	rpc/rpc_client.go:292	config-0-bf1f82e0-c7fc-4aa5-aae6-39c39c170c5c register server push request:ConfigChangeNotifyRequest handler:ConfigChangeNotifyRequestHandler
+2023-09-10T22:06:17.127+0800	DEBUG	rpc/rpc_client.go:292	config-0-bf1f82e0-c7fc-4aa5-aae6-39c39c170c5c register server push request:ConnectResetRequest handler:ConnectResetRequestHandler
+2023-09-10T22:06:17.127+0800	DEBUG	rpc/rpc_client.go:292	config-0-bf1f82e0-c7fc-4aa5-aae6-39c39c170c5c register server push request:ClientDetectionRequest handler:ClientDetectionRequestHandler
+2023-09-10T22:06:17.127+0800	INFO	rpc/rpc_client.go:224	[RpcClient.Start] config-0-bf1f82e0-c7fc-4aa5-aae6-39c39c170c5c try to connect to server on start up, server: {serverIp:127.0.0.1 serverPort:8848 serverGrpcPort:9848}
+2023-09-10T22:06:17.128+0800	INFO	util/common.go:96	Local IP:192.168.5.17
+2023-09-10T22:06:17.313+0800	INFO	rpc/rpc_client.go:234	config-0-bf1f82e0-c7fc-4aa5-aae6-39c39c170c5c success to connect to server {serverIp:127.0.0.1 serverPort:8848 serverGrpcPort:9848} on start up, connectionId=1694354777154_127.0.0.1_51962
+2023-09-10T22:06:22.149+0800	ERROR	cache/disk_cache.go:86	failed to delete config file,cache:tmp/nacos/cache/config/sales-usr-srv@@dev@@9cbeaaea-c313-4ff4-b0ce-3d9f00925555 ,value: ,err:remove tmp/nacos/cache/config/sales-usr-srv@@dev@@9cbeaaea-c313-4ff4-b0ce-3d9f00925555: no such file or directory

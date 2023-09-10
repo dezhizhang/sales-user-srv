@@ -11,3 +11,7 @@ mysql:
   name: "sales_user_srv"
   user: "root"
   password: "701XTAY1993"
+
+consul:
+  host: "127.0.0.1"
+  port: "8500"
