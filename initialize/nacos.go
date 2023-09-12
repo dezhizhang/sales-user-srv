@@ -1,41 +1,44 @@
 package initialize
 
-//func InitNacosConfig(config *model.NacosConfig) {
-//
-//	sc := []constant.ServerConfig{
-//		*constant.NewServerConfig(config.Host, config.Port),
-//	}
-//
-//	//create ClientConfig
-//	cc := *constant.NewClientConfig(
-//		constant.WithNamespaceId(config.Namespace),
-//		constant.WithTimeoutMs(5000),
-//		constant.WithNotLoadCacheAtStart(true),
-//		constant.WithLogDir("tmp/nacos/log"),
-//		constant.WithCacheDir("tmp/nacos/cache"),
-//		constant.WithLogLevel("debug"),
-//	)
-//
-//	client, err := clients.NewConfigClient(
-//		vo.NacosClientParam{
-//			ClientConfig:  &cc,
-//			ServerConfigs: sc,
-//		},
-//	)
-//
-//	if err != nil {
-//		panic(err)
-//	}
-//	//获取nacos配置
-//	content, err := client.GetConfig(vo.ConfigParam{
-//		DataId: config.DataId,
-//		Group:  config.Group,
-//	})
-//
-//	serverConfig := &model.ServerConfig{}
-//	err = json.Unmarshal([]byte(content), &serverConfig)
-//	if err != nil {
-//		panic(err)
-//	}
-//	global.ServerConfig = serverConfig
-//}
+import (
+	"encoding/json"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
+	"go.uber.org/zap"
+	"sales-user-srv/global"
+)
+
+func InitNacos() {
+	nacosConfig := global.NacosConfig
+
+	serverConfigs := []constant.ServerConfig{
+		{
+			IpAddr: nacosConfig.Host,
+			Port:   nacosConfig.Port,
+		},
+	}
+	clientConfig := constant.ClientConfig{
+		NamespaceId:         global.NacosConfig.Namespace,
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogDir:              "tmp/nacos/log",
+		CacheDir:            "tmp/nacos/cache",
+		LogLevel:            "debug",
+	}
+
+	client, _ := clients.CreateConfigClient(map[string]interface{}{
+		"serverConfigs": serverConfigs,
+		"clientConfig":  clientConfig,
+	})
+	content, _ := client.GetConfig(vo.ConfigParam{
+		DataId: nacosConfig.DataId,
+		Group:  nacosConfig.Group,
+	})
+
+	err := json.Unmarshal([]byte(content), global.ServerConfig)
+	if err != nil {
+		zap.S().Errorw("序列化失败%s", err.Error())
+		return
+	}
+}

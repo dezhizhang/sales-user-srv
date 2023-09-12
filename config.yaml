@@ -1,17 +1,9 @@
+#nacos配置文件
 
-name: "user-srv"
-
-user_srv:
-  host: "localhost"
-  port: 8082
-
-mysql:
-  host: "localhost"
-  port: 3306
-  name: "sales_user_srv"
-  user: "root"
-  password: "701XTAY1993"
-
-consul:
-  host: "127.0.0.1"
-  port: "8500"
+host: "127.0.0.1"
+port: 8848
+namespace: "a5445f77-b021-4247-8637-3f27f2ca08fa"
+user: "nacos"
+password: "nacos"
+dataId: "sales-user-srv"
+group: "dev"

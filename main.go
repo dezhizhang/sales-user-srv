@@ -21,6 +21,9 @@ func main() {
 	// 初始化配置文件
 	initialize.InitConfig()
 
+	// 初始化nacos
+	initialize.InitNacos()
+
 	// 初始化数据库
 	initialize.InitDB()
 

@@ -15,7 +15,7 @@ func InitConfig() {
 		panic(err)
 	}
 	//serverConfig := model.SalesServerConfig{}
-	if err := v.Unmarshal(global.ServerConfig); err != nil {
+	if err := v.Unmarshal(global.NacosConfig); err != nil {
 		panic(err)
 	}
 	//zap.S().Infof("配置信息：%v", global.ServerConfig)
@@ -26,7 +26,7 @@ func InitConfig() {
 		if err := v.ReadInConfig(); err != nil {
 			panic(err)
 		}
-		if err := v.Unmarshal(&global.ServerConfig); err != nil {
+		if err := v.Unmarshal(&global.NacosConfig); err != nil {
 			panic(err)
 		}
 		zap.S().Infof("配置信息：%v", global.ServerConfig)
